@@ -1,0 +1,19 @@
+- hosts: localhost
+  gather_facts: no
+  pre_tasks:
+    - name: Set token
+      include_role:
+        name: api
+        tasks_from: set_token
+  tasks:
+    - name: Check VM_ID
+      fail:
+        msg: "VM_ID is not defined. Exiting..."
+      when: VM_ID is undefined
+
+    - name: Stop server
+      include_role:
+        name: api
+        tasks_from: stop_server
+      vars:
+        Vm_id: "{{ VM_ID }}"

@@ -1,0 +1,37 @@
+- hosts: localhost
+  gather_facts: no
+  pre_tasks:
+    - name: Set token
+      include_role:
+        name: api
+        tasks_from: set_token
+    - name: Set vars
+      set_fact:
+        _group_name: "vm"
+        _host_vars_dir: "{{ playbook_dir }}/host_vars"
+        _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
+      vars:
+        _project_name: "{{ playbook_dir.split('/')[-1] }}"
+  tasks:
+    - name: Check <_host_vars_dir> exists
+      local_action:
+        module: stat
+        args:
+          path: "{{ _host_vars_dir }}"
+      register: _result_stat
+
+    - name: Delete VMs
+      block:
+        - set_fact:
+            vm_ids: "{{ vm_ids | default([]) + [_vm_id] }}"
+          vars:
+            _vm_id: "{{ hostvars[item]['vm']['id'] }}"
+          loop: "{{ groups['vm'] }}"
+
+        - include_role:
+            name: api
+            tasks_from: delete_server
+          loop: "{{ vm_ids }}"
+          loop_control:
+            loop_var: Vm_id
+      when: _result_stat.stat.exists

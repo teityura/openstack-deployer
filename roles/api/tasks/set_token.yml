@@ -1,0 +1,30 @@
+- name: Get token
+  uri:
+    url: "{{ URL.IDENTITY }}/auth/tokens"
+    method: POST
+    body_format: json
+    body:
+      auth:
+        identity:
+          methods:
+            - "password"
+          password:
+            user:
+              id: "{{ AUTH.USER.ID }}"
+              password: "{{ AUTH.USER.PASSWORD }}"
+        scope:
+          project:
+            domain:
+              id: "{{ AUTH.DOMAIN.ID }}"
+            name: "{{ AUTH.PROJECT.NAME }}"
+    status_code: 201
+    validate_certs: no
+  register: _response
+
+- name: Set token
+  set_fact:
+    xauth_token: "{{ _response.x_subject_token }}"
+
+- name: Print token
+  debug:
+    var: xauth_token

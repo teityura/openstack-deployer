@@ -1,0 +1,17 @@
+- name: Show server
+  uri:
+    url: "{{ URL.COMPUTE }}/servers/{{ Vm_id }}"
+    method: GET
+    headers:
+      X-Auth-Token: "{{ xauth_token }}"
+    validate_certs: no
+  register: _response
+
+- name: Print response
+  debug:
+    var: _response.json.server
+
+- name: Set vm_ip
+  set_fact:
+    vm_id: "{{ _response.json.server.id }}"
+    vm_ip: "{{ _response.json.server.addresses[Network_name][0].addr }}"

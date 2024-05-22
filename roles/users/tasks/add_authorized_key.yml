@@ -1,0 +1,13 @@
+- name: Add root user to _users
+  set_fact:
+    _users: "{{ [ansible_user] + ['root'] if ansible_user != 'root' else ['root'] }}"
+
+- name: Print _users
+  debug:
+    var: _users
+
+- name: Set authorized_key
+  authorized_key:
+    user: "{{ item }}"
+    key: "{{ lookup('file', '/keys/' + Key_name + '.id_rsa.pub') }}"
+  loop: "{{ _users }}"

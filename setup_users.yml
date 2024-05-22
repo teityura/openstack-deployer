@@ -1,0 +1,9 @@
+- hosts: all
+  gather_facts: no
+  become: yes
+  become_method: sudo
+  remote_user: ansible_user
+  roles:
+    - role: users
+      vars:
+        Key_name: "{{ KEY_NAME }}"

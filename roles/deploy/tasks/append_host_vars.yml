@@ -1,0 +1,31 @@
+- name: Check <Host_vars_file> exists
+  local_action:
+    module: stat
+    args:
+      path: "{{ Host_vars_file }}"
+  register: _result_stat
+
+- name: Create <Host_vars_file>
+  block:
+  - name: Create Host_vars_file directory
+    local_action:
+      module: file
+      args:
+        path: "{{ Host_vars_file | dirname }}"
+        state: directory
+
+  - name: Generate <Host_vars_file>
+    local_action:
+      module: blockinfile
+      args:
+        path: "{{ Host_vars_file }}"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR vm info"
+        block: |
+          ansible_user: "{{ User_name }}"
+          vm:
+            name: "{{ Vm_name }}"
+            id: "{{ Vm_id }}"
+            ip: "{{ Vm_ip }}"
+            ssh_user: "{{ User_name }}"
+        create: yes
+  when: not _result_stat.stat.exists

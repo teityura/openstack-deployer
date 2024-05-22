@@ -1,0 +1,37 @@
+- name: Set server
+  set_fact:
+    server_data:
+      server:
+        name: "{{ Vm_name }}"
+        flavorRef: "{{ Flv_uuid }}"
+        key_name: "{{ Key_name }}"
+        config_drive: yes
+        networks: "{{ Network_uuids }}"
+        "OS-DCF:diskConfig": "AUTO"
+        block_device_mapping_v2:
+          - boot_index: "0"
+            uuid: "{{ Img_uuid }}"
+            source_type: "image"
+            volume_size: "{{ Vol_size }}"
+            destination_type: "volume"
+            delete_on_termination: yes
+
+- name: Create server
+  uri:
+    url: "{{ URL.COMPUTE }}/servers"
+    method: POST
+    headers:
+      X-Auth-Token: "{{ xauth_token }}"
+    body_format: json
+    body: "{{ server_data | to_json }}"
+    status_code: 202
+    validate_certs: no
+  register: _response
+
+- name: Print server.id, server.adminPass 
+  debug:
+    var: _response.json.server
+
+- name: Set vm_id
+  set_fact:
+    vm_id: "{{ _response.json.server.id }}"

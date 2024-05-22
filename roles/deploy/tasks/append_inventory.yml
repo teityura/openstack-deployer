@@ -1,0 +1,26 @@
+- name: Find host_vars files
+  local_action:
+    module: find
+    args:
+      paths: "{{ Host_vars_dir }}"
+      file_type: file
+  register: _result_find
+
+- name: Extract hostnames
+  set_fact:
+    hostnames: "{{ _full_paths | map('basename') | map('splitext') | map('first') }}"
+  vars:
+    _full_paths: "{{ _result_find.files | map(attribute='path') }}"
+
+- name: Add hostnames to hosts file
+  local_action:
+    module: blockinfile
+    args:
+      path: "{{ Inventory_file }}"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK for inventory hosts"
+      block: |
+        [{{ Group_name }}]
+        {% for hostname in hostnames %}
+        {{ hostname }}
+        {% endfor %}
+      create: yes

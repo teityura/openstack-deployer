@@ -1,0 +1,28 @@
+- hosts: localhost
+  gather_facts: yes
+  pre_tasks:
+    - name: Set token
+      include_role:
+        name: api
+        tasks_from: set_token
+    - name: Set vars
+      set_fact:
+        _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
+      vars:
+        _project_name: "{{ playbook_dir.split('/')[-1] }}"
+  tasks:
+    - name: Delete ssh key
+      include_role:
+        name: api
+        tasks_from: delete_ssh_key
+      vars:
+        Key_name: "{{ KEY_NAME }}"
+
+    - name: Delete files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ _config_path }}"
+        - "/keys/{{ KEY_NAME }}.id_rsa"
+        - "/keys/{{ KEY_NAME }}.id_rsa.pub"

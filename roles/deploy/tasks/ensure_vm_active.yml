@@ -1,0 +1,12 @@
+- name: Wait for the server to become ACTIVE
+  uri:
+    url: "{{ URL.COMPUTE }}/servers/{{ Vm_id }}"
+    method: GET
+    headers:
+      X-Auth-Token: "{{ xauth_token }}"
+    status_code: [200, 404]
+    validate_certs: no
+  register: _response
+  until: (_response.status == 200 and _response.json.server.status == "ACTIVE")
+  retries: 30
+  delay: 3

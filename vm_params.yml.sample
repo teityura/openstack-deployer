@@ -1,0 +1,22 @@
+---
+vm_params:
+  - VM_NAME: vm_alma94
+    IMG_UUID: <img_uuid>
+    FLV_UUID: <flv_uuid>
+    VOL_SIZE: 20
+    USER_NAME: almalinux
+  - VM_NAME: vm_alma89
+    IMG_UUID: <img_uuid>
+    FLV_UUID: <flv_uuid>
+    VOL_SIZE: 20
+    USER_NAME: almalinux
+  - VM_NAME: vm_ubuntu2204
+    IMG_UUID: <img_uuid>
+    FLV_UUID: <flv_uuid>
+    VOL_SIZE: 20
+    USER_NAME: ubuntu
+  - VM_NAME: vm_ubuntu2004
+    IMG_UUID: <img_uuid>
+    FLV_UUID: <flv_uuid>
+    VOL_SIZE: 20
+    USER_NAME: ubuntu

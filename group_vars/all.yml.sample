@@ -1,0 +1,21 @@
+URL:
+  COMPUTE: "https://example.com:8774/v2.1/xxx"
+  IDENTITY: "https://example.com:5000/v3"
+
+AUTH:
+  USER:
+    ID: "<user_uuid>"
+    PASSWORD: "<user_pass>"
+  DOMAIN:
+    ID: "<domain_uuid>"
+  PROJECT:
+    ID: "<project_uuid>"
+    NAME: "<project_name>"
+
+NETWORKS:
+  - NAME: "network_name"
+    ID: "<net_uuid>"
+  - NAME: "<network_name>"
+    ID: "<net_uuid>"
+
+KEY_NAME: "<key_name>"

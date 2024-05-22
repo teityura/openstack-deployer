@@ -1,0 +1,18 @@
+- name: Print facts
+  debug:
+    msg: |
+      ansible_hostname: {{ ansible_hostname }}
+      ansible_os_family: {{ ansible_os_family }}
+      ansible_distribution: {{ ansible_distribution }}
+      ansible_distribution_major_version: {{ ansible_distribution_major_version }}
+      ansible_kernel: {{ ansible_kernel }}
+      ansible_architecture: {{ ansible_architecture }}
+      ansible_interfaces: {{ ansible_interfaces }}
+
+- name: Import debian tasks
+  import_tasks: test_debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Import redhat tasks
+  import_tasks: test_redhat.yml
+  when: ansible_os_family == "RedHat"

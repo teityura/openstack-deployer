@@ -1,0 +1,12 @@
+- name: Install openssl-devel
+  package:
+    name: openssl-devel
+    state: present
+
+- name: Collect all package info
+  package_facts:
+    manager: auto
+
+- name: Print openssl-devel package info
+  debug:
+    var: ansible_facts.packages['openssl-devel']

@@ -1,0 +1,12 @@
+- name: Install libssl-dev
+  package:
+    name: libssl-dev
+    state: present
+
+- name: Collect all package info
+  package_facts:
+    manager: auto
+
+- name: Print libssl-dev package info
+  debug:
+    var: ansible_facts.packages['libssl-dev']

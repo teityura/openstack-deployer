@@ -1,0 +1,29 @@
+- name: Check if keypair exists
+  uri:
+    url: "{{ URL.COMPUTE }}/os-keypairs/{{ Key_name }}"
+    method: GET
+    headers:
+      X-Auth-Token: "{{ xauth_token }}"
+    status_code: [200, 404]
+    validate_certs: no
+  register: _response
+
+- name: Import keypair if not exists
+  block:
+  - slurp:
+      src: "/keys/{{ Key_name }}.id_rsa.pub"
+    register: _result_slurp
+
+  - uri:
+      url: "{{ URL.COMPUTE }}/os-keypairs"
+      method: POST
+      headers:
+        X-Auth-Token: "{{ xauth_token }}"
+      body_format: json
+      body:
+        keypair:
+          name: "{{ Key_name }}"
+          public_key: "{{ (_result_slurp.content | b64decode).strip() }}"
+      status_code: [200, 201]
+      validate_certs: no
+  when: _response.status == 404

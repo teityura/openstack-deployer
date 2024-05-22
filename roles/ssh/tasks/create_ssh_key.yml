@@ -1,0 +1,12 @@
+- name: Generate key
+  user:
+    name: "{{ ansible_env.USER }}"
+    generate_ssh_key: yes
+    ssh_key_file: "/keys/{{ Key_name }}.id_rsa"
+    ssh_key_bits: 4096
+    state: present
+
+- name: Change permission
+  file:
+    path: "/keys/{{ Key_name }}.id_rsa"
+    mode: 0600

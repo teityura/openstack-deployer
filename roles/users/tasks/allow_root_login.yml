@@ -1,0 +1,16 @@
+- name: Allow PermitRootLogin
+  blockinfile:
+    path: /etc/ssh/sshd_config.d/PermitRootLogin.conf
+    block: |
+      PermitRootLogin yes
+      PubkeyAuthentication yes
+      PasswordAuthentication no
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for PermitRootLogin"
+    create: yes
+  register: _result_blockinfile
+
+- name: Reload sshd
+  systemd:
+    name: sshd
+    state: reloaded
+  when: _result_blockinfile.changed

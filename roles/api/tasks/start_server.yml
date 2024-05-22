@@ -1,0 +1,12 @@
+- name: Start server
+  uri:
+    url: "{{ URL.COMPUTE }}/servers/{{ Vm_id }}/action"
+    method: POST
+    headers:
+      X-Auth-Token: "{{ xauth_token }}"
+    body_format: json
+    body:
+      os-start: null
+    status_code: 202
+    validate_certs: no
+  register: _response

@@ -1,0 +1,21 @@
+- name: Show server 
+  uri:
+    url: "{{ URL.COMPUTE }}/servers/{{ Vm_id }}"
+    method: GET
+    headers:
+      X-Auth-Token: "{{ xauth_token }}"
+    validate_certs: no
+  register: _response
+
+- name: Print response
+  debug:
+    msg: |
+      VM Name: {{ _response.json.server.name }}
+      VM ID: {{ _response.json.server.id }}
+      Flavor ID: {{ _response.json.server.flavor.id }}
+      Tenant ID: {{ _response.json.server.tenant_id }}
+      User ID: {{ _response.json.server.user_id }}
+      Status: {{ _response.json.server.status }}
+      {% for network, addresses in _response.json.server.addresses.items() %}
+      <{{ network }}> IPs: {{ addresses | map(attribute='addr') | join(', ') }}
+      {% endfor %}

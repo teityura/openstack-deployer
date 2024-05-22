@@ -1,0 +1,21 @@
+- hosts: localhost
+  gather_facts: yes
+  pre_tasks:
+    - name: Set token
+      include_role:
+        name: api
+        tasks_from: set_token
+  tasks:
+    - name: Create ssh key to /keys
+      include_role:
+        name: ssh
+        tasks_from: create_ssh_key
+      vars:
+        Key_name: "{{ KEY_NAME }}"
+
+    - name: Import ssh key to openstack
+      include_role:
+        name: deploy
+        tasks_from: import_ssh_key
+      vars:
+        Key_name: "{{ KEY_NAME }}"
