@@ -19,3 +19,4 @@ NETWORKS:
     ID: "<net_uuid>"
 
 KEY_NAME: "<key_name>"
+GROUP_NAME: "<group_name>"

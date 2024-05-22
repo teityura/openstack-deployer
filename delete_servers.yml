@@ -7,7 +7,6 @@
         tasks_from: set_token
     - name: Set vars
       set_fact:
-        _group_name: "vm"
         _host_vars_dir: "{{ playbook_dir }}/host_vars"
         _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
       vars:
@@ -25,8 +24,8 @@
         - set_fact:
             vm_ids: "{{ vm_ids | default([]) + [_vm_id] }}"
           vars:
-            _vm_id: "{{ hostvars[item]['vm']['id'] }}"
-          loop: "{{ groups['vm'] }}"
+            _vm_id: "{{ hostvars[item][GROUP_NAME]['id'] }}"
+          loop: "{{ groups[GROUP_NAME] }}"
 
         - include_role:
             name: api

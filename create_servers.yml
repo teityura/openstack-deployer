@@ -13,7 +13,6 @@
         _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
         _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
         _host_vars_dir: "{{ playbook_dir }}/host_vars"
-        _group_name: "vm"
       vars:
         _project_name: "{{ playbook_dir.split('/')[-1] }}"
   tasks:

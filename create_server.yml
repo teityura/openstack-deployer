@@ -11,7 +11,6 @@
         _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
         _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
         _host_vars_dir: "{{ playbook_dir }}/host_vars"
-        _group_name: "vm"
       vars:
         _project_name: "{{ playbook_dir.split('/')[-1] }}"
   vars:
@@ -75,7 +74,7 @@
       vars:
         Host_vars_dir: "{{ _host_vars_dir }}"
         Inventory_file: "{{ playbook_dir }}/hosts"
-        Group_name: "{{ _group_name }}"
+        Group_name: "{{ GROUP_NAME }}"
 
     - name: Append ssh config
       block:
