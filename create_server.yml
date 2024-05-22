@@ -15,10 +15,10 @@
         _project_name: "{{ playbook_dir.split('/')[-1] }}"
   vars:
     VM_NAME: "{{ _vm_name }}"
-    IMG_UUID: 5fb41c8f-2291-463d-b493-e22d7bc8dcad  # ubuntu2204
-    FLV_UUID: 5ea6b687-f828-4a02-a0fb-14c1c4c95289  # 03-medium
-    VOL_SIZE: 20
-    USER_NAME: ubuntu
+    IMG_UUID: <img_uuid>  # replace with image uuid
+    FLV_UUID: <flv_uuid>  # replace with flavor uuid
+    VOL_SIZE: <vol_size>  # replace with volume size
+    USER_NAME: <user_name>  # replace with user name
   tasks:
     - name: Create Server
       include_role:
