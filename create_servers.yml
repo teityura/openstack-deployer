@@ -13,10 +13,10 @@
         file: "{{ _vm_params_file }}"
         name: _tmp
 
-    - name: Define vm group
+    - name: Define vm_group
       add_host:
         name: "{{ vm.VM_NAME }}"
-        groups: vm
+        groups: vm_group
         VM_NAME: "{{ vm.VM_NAME }}"
         IMG_UUID: "{{ vm.IMG_UUID }}"
         FLV_UUID: "{{ vm.FLV_UUID }}"
@@ -27,7 +27,7 @@
         loop_var: vm
       when: vm.VM_NAME not in groups['all']
 
-- hosts: vm
+- hosts: vm_group
   gather_facts: no
   pre_tasks:
     - name: Set vars

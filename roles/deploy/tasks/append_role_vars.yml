@@ -1,27 +1,23 @@
-- name: Include <Role_vars_file> to _tmp
-  include_vars:
-    file: "{{ Role_vars_file }}"
-    name: _tmp
-  ignore_errors: yes
-  failed_when: no
+- name: Ensure <Role_vars_file> exists with ssh_hosts
+  local_action:
+    module: lineinfile
+    args:
+      path: "{{ Role_vars_file }}"
+      line: "ssh_hosts:"
+      create: yes
+      state: present
 
-- name: Load ssh_hosts to _tmp_hosts
+- name: Check if VM is in the <Role_vars_file>
   set_fact:
-    _tmp_hosts: "{{ _tmp.ssh_hosts | default([]) }}"
-
-- name: Check if VM is in the list
-  set_fact:
-    _vm_exists: "{{ _tmp_hosts | selectattr('ip', 'equalto', Vm_ip) | list | length > 0 }}"
+    _vm_exists: "{{ ssh_hosts | selectattr('name', 'equalto', Vm_name) | list | length > 0 }}"
+  vars:
+    ssh_hosts: "{{ lookup('file', Role_vars_file).ssh_hosts | from_yaml | default([]) }}"
 
 - name: Append VM to the list if not exists
-  block:
-    - set_fact:
-        _new_yaml: "{{ {'ssh_hosts': _new_hosts} | to_nice_yaml(indent=2) }}"
-      vars:
-        _new_hosts: "{{ _tmp_hosts + [{'name': Vm_name, 'ip': Vm_ip}] }}"
-    - local_action:
-        module: copy
-        args:
-          dest: "{{ Role_vars_file }}"
-          content: "{{ _new_yaml }}\n"
-  when: not _vm_exists 
+  local_action:
+    module: lineinfile
+    args:
+      path: "{{ Role_vars_file }}"
+      insertafter: "ssh_hosts:"
+      line: "{{ '  - {name: %s, ip: %s }' | format(Vm_name, Vm_ip) }}"
+  when: not _vm_exists
