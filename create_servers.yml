@@ -1,29 +1,22 @@
 - hosts: localhost
-  gather_facts: yes
-  vars:
-    _vm_params_file: "{{ playbook_dir }}/vm_params.yml"
+  gather_facts: no
   pre_tasks:
     - name: Set token
       include_role:
         name: api
         tasks_from: set_token
-    - name: Set vars
-      set_fact:
-        _vm_name: "{{ 'vm_' + lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
-        _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
-        _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
-        _host_vars_dir: "{{ playbook_dir }}/host_vars"
-      vars:
-        _project_name: "{{ playbook_dir.split('/')[-1] }}"
+  vars:
+    _vm_params_file: "{{ playbook_dir }}/vm_params.yml"
   tasks:
     - name: Include <_vm_params_file> to vm_params
       include_vars:
         file: "{{ _vm_params_file }}"
         name: _tmp
 
-    - name: Execute create_server_tasks
-      include_tasks: create_server_tasks.yml
-      vars:
+    - name: Define vm group
+      add_host:
+        name: "{{ vm.VM_NAME }}"
+        groups: vm
         VM_NAME: "{{ vm.VM_NAME }}"
         IMG_UUID: "{{ vm.IMG_UUID }}"
         FLV_UUID: "{{ vm.FLV_UUID }}"
@@ -33,3 +26,22 @@
       loop_control:
         loop_var: vm
       when: vm.VM_NAME not in groups['all']
+
+- hosts: vm
+  gather_facts: no
+  pre_tasks:
+    - name: Set vars
+      set_fact:
+        _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
+        _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
+        _host_vars_dir: "{{ playbook_dir }}/host_vars"
+        xauth_token: "{{ hostvars['localhost']['xauth_token'] }}"
+      vars:
+        _project_name: "{{ playbook_dir.split('/')[-1] }}"
+      run_once: yes
+  tasks:
+    - name: Execute create_server_tasks
+      include_tasks:
+        file: create_server_tasks.yml
+        apply:
+          delegate_to: localhost
