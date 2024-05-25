@@ -3,7 +3,7 @@
     url: "{{ URL.COMPUTE }}/servers/{{ Vm_id }}"
     method: DELETE
     headers:
-      X-Auth-Token: "{{ xauth_token }}"
+      X-Auth-Token: "{{ Xauth_token }}"
     status_code: 204
     validate_certs: no
   register: _response

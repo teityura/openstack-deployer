@@ -1,7 +1,7 @@
 - hosts: localhost
   gather_facts: no
   pre_tasks:
-    - name: Set token
+    - name: Set _xauth_token
       include_role:
         name: api
         tasks_from: set_token
@@ -16,4 +16,5 @@
         name: api
         tasks_from: stop_server
       vars:
+        Xauth_token: "{{ _xauth_token }}"
         Vm_id: "{{ VM_ID }}"

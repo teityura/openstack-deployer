@@ -1,7 +1,7 @@
 - hosts: localhost
   gather_facts: yes
   pre_tasks:
-    - name: Set token
+    - name: Set _xauth_token
       include_role:
         name: api
         tasks_from: set_token
@@ -16,6 +16,7 @@
         name: api
         tasks_from: delete_ssh_key
       vars:
+        Xauth_token: "{{ _xauth_token }}"
         Key_name: "{{ KEY_NAME }}"
 
     - name: Delete files

@@ -21,7 +21,7 @@
     url: "{{ URL.COMPUTE }}/servers"
     method: POST
     headers:
-      X-Auth-Token: "{{ xauth_token }}"
+      X-Auth-Token: "{{ Xauth_token }}"
     body_format: json
     body: "{{ _server_data | to_json }}"
     status_code: 202

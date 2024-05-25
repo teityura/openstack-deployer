@@ -21,10 +21,10 @@
     validate_certs: no
   register: _response
 
-- name: Set token
+- name: Set _xauth_token
   set_fact:
-    xauth_token: "{{ _response.x_subject_token }}"
+    _xauth_token: "{{ _response.x_subject_token }}"
 
-- name: Print token
+- name: Print _xauth_token
   debug:
-    var: xauth_token
+    var: _xauth_token

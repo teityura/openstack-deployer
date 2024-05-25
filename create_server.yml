@@ -1,13 +1,13 @@
 - hosts: localhost
   gather_facts: yes
   pre_tasks:
-    - name: Set token
+    - name: Set _xauth_token
       include_role:
         name: api
         tasks_from: set_token
     - name: Set vars
       set_fact:
-        _vm_name: "{{ 'vm_' + lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+        _vm_date: "{{ 'vm_' + lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
         _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
         _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
         _host_vars_dir: "{{ playbook_dir }}/host_vars"
@@ -15,7 +15,7 @@
       vars:
         _project_name: "{{ playbook_dir.split('/')[-1] }}"
   vars:
-    VM_NAME: "{{ _vm_name }}"
+    VM_NAME: "{{ _vm_date }}"
     IMG_UUID: <img_uuid>  # replace with image uuid
     FLV_UUID: <flv_uuid>  # replace with flavor uuid
     VOL_SIZE: <vol_size>  # replace with volume size
@@ -25,6 +25,7 @@
       include_tasks:
         file: create_server_tasks.yml
       vars:
+        Xauth_token: "{{ _xauth_token }}"
         Ansible_ssh_config: "{{ _config_path }}"
         Role_vars_file: "{{ _role_vars_file }}"
         Host_vars_dir: "{{ _host_vars_dir }}"

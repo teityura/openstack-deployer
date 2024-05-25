@@ -3,7 +3,7 @@
     url: "{{ URL.COMPUTE }}/os-keypairs/{{ Key_name }}"
     method: GET
     headers:
-      X-Auth-Token: "{{ xauth_token }}"
+      X-Auth-Token: "{{ Xauth_token }}"
     status_code: [200, 404]
     validate_certs: no
   register: _response
@@ -18,7 +18,7 @@
       url: "{{ URL.COMPUTE }}/os-keypairs"
       method: POST
       headers:
-        X-Auth-Token: "{{ xauth_token }}"
+        X-Auth-Token: "{{ Xauth_token }}"
       body_format: json
       body:
         keypair:

@@ -1,7 +1,7 @@
 - hosts: localhost
   gather_facts: no
   pre_tasks:
-    - name: Set token
+    - name: Set _xauth_token
       include_role:
         name: api
         tasks_from: set_token
@@ -27,6 +27,7 @@
         loop_var: vm
       when: vm.VM_NAME not in groups['all']
 
+
 - hosts: vm_group
   gather_facts: no
   pre_tasks:
@@ -35,7 +36,7 @@
         _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
         _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
         _host_vars_dir: "{{ playbook_dir }}/host_vars"
-        xauth_token: "{{ hostvars['localhost']['xauth_token'] }}"
+        _inventory_file: "{{ playbook_dir }}/hosts"
       vars:
         _project_name: "{{ playbook_dir.split('/')[-1] }}"
       run_once: yes
@@ -45,3 +46,17 @@
         file: create_server_tasks.yml
         apply:
           delegate_to: localhost
+      vars:
+        Xauth_token: "{{ hostvars['localhost']['_xauth_token'] }}"
+        Ansible_ssh_config: "{{ _config_path }}"
+        Role_vars_file: "{{ _role_vars_file }}"
+        Host_vars_dir: "{{ _host_vars_dir }}"
+        Inventory_file: "{{ _inventory_file }}"
+        Vm_name: "{{ VM_NAME }}"
+        Img_uuid: "{{ IMG_UUID }}"
+        Flv_uuid: "{{ FLV_UUID }}"
+        Vol_size: "{{ VOL_SIZE }}"
+        User_name: "{{ USER_NAME }}"
+        Networks: "{{ NETWORKS }}"
+        Key_name: "{{ KEY_NAME }}"
+        Group_name: "{{ GROUP_NAME }}"

@@ -25,7 +25,7 @@
     name: deploy
     tasks_from: append_role_vars
   vars:
-    vm_name: "{{ _vm_name }}"
+    vm_name: "{{ Vm_name }}"
     vm_ip: "{{ _vm_ip }}"
 
 - name: Append host vars
@@ -34,7 +34,7 @@
     tasks_from: append_host_vars
   vars:
     host_vars_file: "{{ Host_vars_dir }}/{{ Vm_name }}.yml"
-    vm_name: "{{ _vm_name }}"
+    vm_name: "{{ Vm_name }}"
     vm_id: "{{ _vm_id }}"
     vm_ip: "{{ _vm_ip }}"
 

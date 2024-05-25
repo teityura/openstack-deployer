@@ -3,7 +3,7 @@
     url: "{{ URL.COMPUTE }}/servers/{{ vm_id }}"
     method: GET
     headers:
-      X-Auth-Token: "{{ xauth_token }}"
+      X-Auth-Token: "{{ Xauth_token }}"
     validate_certs: no
   register: _response
 

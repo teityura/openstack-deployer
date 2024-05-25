@@ -1,7 +1,7 @@
 - hosts: localhost
   gather_facts: yes
   pre_tasks:
-    - name: Set token
+    - name: Set _xauth_token
       include_role:
         name: api
         tasks_from: set_token
@@ -11,6 +11,7 @@
         name: ssh
         tasks_from: create_ssh_key
       vars:
+        Xauth_token: "{{ _xauth_token }}"
         Key_name: "{{ KEY_NAME }}"
 
     - name: Import ssh key to openstack
@@ -18,4 +19,5 @@
         name: deploy
         tasks_from: import_ssh_key
       vars:
+        Xauth_token: "{{ _xauth_token }}"
         Key_name: "{{ KEY_NAME }}"

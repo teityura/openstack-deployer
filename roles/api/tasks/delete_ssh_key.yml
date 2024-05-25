@@ -3,7 +3,7 @@
     url: "{{ URL.COMPUTE }}/os-keypairs/{{ Key_name }}"
     method: DELETE
     headers:
-      X-Auth-Token: "{{ xauth_token }}"
+      X-Auth-Token: "{{ Xauth_token }}"
     status_code: [202, 204, 404]
     validate_certs: no
   register: _result_uri
