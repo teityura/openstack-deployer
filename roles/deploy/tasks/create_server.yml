@@ -1,12 +1,12 @@
 - name: Set server
   set_fact:
-    server_data:
+    _server_data:
       server:
         name: "{{ Vm_name }}"
         flavorRef: "{{ Flv_uuid }}"
         key_name: "{{ Key_name }}"
         config_drive: yes
-        networks: "{{ Network_uuids }}"
+        networks: "{{ networks_uuids }}"
         "OS-DCF:diskConfig": "AUTO"
         block_device_mapping_v2:
           - boot_index: "0"
@@ -23,7 +23,7 @@
     headers:
       X-Auth-Token: "{{ xauth_token }}"
     body_format: json
-    body: "{{ server_data | to_json }}"
+    body: "{{ _server_data | to_json }}"
     status_code: 202
     validate_certs: no
   register: _response
@@ -32,6 +32,6 @@
   debug:
     var: _response.json.server
 
-- name: Set vm_id
+- name: Set _vm_id
   set_fact:
-    vm_id: "{{ _response.json.server.id }}"
+    _vm_id: "{{ _response.json.server.id }}"

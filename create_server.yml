@@ -11,6 +11,7 @@
         _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
         _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
         _host_vars_dir: "{{ playbook_dir }}/host_vars"
+        _inventory_file: "{{ playbook_dir }}/hosts"
       vars:
         _project_name: "{{ playbook_dir.split('/')[-1] }}"
   vars:
@@ -20,69 +21,19 @@
     VOL_SIZE: <vol_size>  # replace with volume size
     USER_NAME: <user_name>  # replace with user name
   tasks:
-    - name: Create Server
-      include_role:
-        name: deploy
-        tasks_from: create_server
+    - name: Execute create_server_tasks
+      include_tasks:
+        file: create_server_tasks.yml
       vars:
-        Key_name: "{{ KEY_NAME }}"
-        Vm_name: "{{ VM_NAME }}"
-        Flv_uuid: "{{ FLV_UUID }}"
-        Img_uuid: "{{ IMG_UUID }}"
-        Vol_size: "{{ VOL_SIZE }}"
-        Network_uuids: "{{ NETWORKS | map(attribute='ID') | map('regex_replace', '^(.*)$', '{uuid: \\1}') | map('from_yaml') }}"
-
-    - name: Ensure VM is active before proceeding
-      include_role:
-        name: deploy
-        tasks_from: ensure_vm_active
-      vars:
-        Vm_id: "{{ vm_id }}"
-
-    - name: Extruct server info
-      include_role:
-        name: deploy
-        tasks_from: extract_server_info
-      vars:
-        Vm_id: "{{ vm_id }}"
-        Network_name: "{{ NETWORKS | map(attribute='NAME') | first }}"
-
-    - name: Append role vars
-      include_role:
-        name: deploy
-        tasks_from: append_role_vars
-      vars:
+        Ansible_ssh_config: "{{ _config_path }}"
         Role_vars_file: "{{ _role_vars_file }}"
-        Vm_name: "{{ VM_NAME }}"
-        Vm_ip: "{{ vm_ip }}"
-
-    - name: Append host vars
-      include_role:
-        name: deploy
-        tasks_from: append_host_vars
-      vars:
-        Host_vars_file: "{{ _host_vars_dir }}/{{ VM_NAME }}.yml"
-        Vm_name: "{{ VM_NAME }}"
-        Vm_id: "{{ vm_id }}"
-        Vm_ip: "{{ vm_ip }}"
-        User_name: "{{ USER_NAME }}"
-
-    - name: Append inventory hosts
-      include_role:
-        name: deploy
-        tasks_from: append_inventory
-      vars:
         Host_vars_dir: "{{ _host_vars_dir }}"
-        Inventory_file: "{{ playbook_dir }}/hosts"
+        Inventory_file: "{{ _inventory_file }}"
+        Vm_name: "{{ VM_NAME }}"
+        Img_uuid: "{{ IMG_UUID }}"
+        Flv_uuid: "{{ FLV_UUID }}"
+        Vol_size: "{{ VOL_SIZE }}"
+        User_name: "{{ USER_NAME }}"
+        Networks: "{{ NETWORKS }}"
+        Key_name: "{{ KEY_NAME }}"
         Group_name: "{{ GROUP_NAME }}"
-
-    - name: Append ssh config
-      block:
-      - include_vars:
-          file: "{{ _role_vars_file }}"
-      - include_role:
-          name: ssh
-          tasks_from: create_ssh_config
-        vars:
-          Ansible_ssh_config: "{{ _config_path }}"
-          Key_name: "{{ KEY_NAME }}"

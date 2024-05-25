@@ -1,6 +1,6 @@
 - name: Wait for the server to become ACTIVE
   uri:
-    url: "{{ URL.COMPUTE }}/servers/{{ Vm_id }}"
+    url: "{{ URL.COMPUTE }}/servers/{{ vm_id }}"
     method: GET
     headers:
       X-Auth-Token: "{{ xauth_token }}"

@@ -9,7 +9,7 @@
 
 - name: Check if VM is in the <Role_vars_file>
   set_fact:
-    _vm_exists: "{{ ssh_hosts | selectattr('name', 'equalto', Vm_name) | list | length > 0 }}"
+    _vm_exists: "{{ ssh_hosts | selectattr('name', 'equalto', vm_name) | list | length > 0 }}"
   vars:
     ssh_hosts: "{{ lookup('file', Role_vars_file).ssh_hosts | from_yaml | default([]) }}"
 
@@ -19,5 +19,5 @@
     args:
       path: "{{ Role_vars_file }}"
       insertafter: "ssh_hosts:"
-      line: "{{ '  - {name: %s, ip: %s }' | format(Vm_name, Vm_ip) }}"
+      line: "{{ '  - {name: %s, ip: %s }' | format(vm_name, vm_ip) }}"
   when: not _vm_exists
