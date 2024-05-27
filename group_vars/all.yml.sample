@@ -1,5 +1,5 @@
 URL:
-  COMPUTE: "https://example.com:8774/v2.1/xxx"
+  COMPUTE: "https://example.com:8774/v2.1"
   IDENTITY: "https://example.com:5000/v3"
 
 AUTH:
@@ -9,9 +9,10 @@ AUTH:
   DOMAIN:
     ID: "<domain_uuid>"
   PROJECT:
-    ID: "<project_uuid>"
     NAME: "<project_name>"
 
+# [NOTE]
+# NETWORKS[0] is used for ssh connection
 NETWORKS:
   - NAME: "network_name"
     ID: "<net_uuid>"
