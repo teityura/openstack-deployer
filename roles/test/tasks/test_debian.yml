@@ -2,6 +2,7 @@
   package:
     name: libssl-dev
     state: present
+    update_cache: yes
 
 - name: Collect all package info
   package_facts:

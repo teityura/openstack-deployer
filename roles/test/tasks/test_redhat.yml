@@ -2,6 +2,7 @@
   package:
     name: openssl-devel
     state: present
+    update_cache: yes
 
 - name: Collect all package info
   package_facts:
