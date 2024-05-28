@@ -1,5 +1,4 @@
 group_vars/all.yml
 host_vars/
 hosts
-roles/ssh/vars/main.yml
 vm_params.yml

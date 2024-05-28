@@ -24,6 +24,7 @@ encrypt:
 deploy:
 	ansible-playbook create_key.yml
 	ansible-playbook create_servers.yml
+	ansible-playbook create_ssh_config.yml
 	ansible-playbook ensure_vm_ssh.yml
 	ansible-playbook setup_users.yml
 

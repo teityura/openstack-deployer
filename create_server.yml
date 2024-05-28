@@ -8,12 +8,8 @@
     - name: Set vars
       set_fact:
         _vm_date: "{{ 'vm_' + lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
-        _config_path: "/etc/ssh/ssh_config.d/{{ _project_name }}.conf"
-        _role_vars_file: "{{ playbook_dir }}/roles/ssh/vars/main.yml"
         _host_vars_dir: "{{ playbook_dir }}/host_vars"
         _inventory_file: "{{ playbook_dir }}/hosts"
-      vars:
-        _project_name: "{{ playbook_dir.split('/')[-1] }}"
   vars:
     VM_NAME: "{{ _vm_date }}"
     IMG_UUID: <img_uuid>  # replace with image uuid
@@ -21,13 +17,13 @@
     VOL_SIZE: <vol_size>  # replace with volume size
     USER_NAME: <user_name>  # replace with user name
   tasks:
-    - name: Execute create_server_tasks
-      include_tasks:
-        file: create_server_tasks.yml
+    - name: Include deploy role
+      include_role:
+        name: deploy
+        apply:
+          delegate_to: localhost
       vars:
         Xauth_token: "{{ _xauth_token }}"
-        Ansible_ssh_config: "{{ _config_path }}"
-        Role_vars_file: "{{ _role_vars_file }}"
         Host_vars_dir: "{{ _host_vars_dir }}"
         Inventory_file: "{{ _inventory_file }}"
         Vm_name: "{{ VM_NAME }}"
@@ -38,3 +34,12 @@
         Networks: "{{ NETWORKS }}"
         Key_name: "{{ KEY_NAME }}"
         Group_name: "{{ GROUP_NAME }}"
+  post_tasks:
+    - name: Prompt to run create_ssh_config
+      debug:
+        msg: |
+          All tasks have completed.
+          Please run the following command.
+          ===
+          ansible-playbook create_ssh_config.yml
+          ===

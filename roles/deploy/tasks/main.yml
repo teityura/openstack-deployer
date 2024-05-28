@@ -1,0 +1,26 @@
+- name: Create Server
+  include_tasks: create_server.yml
+  vars:
+    networks_uuids: "{{ Networks | map(attribute='ID') | map('regex_replace', '^(.*)$', '{uuid: \\1}') | map('from_yaml') }}"
+
+- name: Ensure VM is active before proceeding
+  import_tasks: ensure_vm_active.yml
+  vars:
+    vm_id: "{{ _vm_id }}"
+
+- name: Extruct server info
+  import_tasks: extract_server_info.yml
+  vars:
+    vm_id: "{{ _vm_id }}"
+    network_name: "{{ Networks | map(attribute='NAME') | first }}"
+
+- name: Append host vars
+  import_tasks: append_host_vars.yml
+  vars:
+    host_vars_file: "{{ Host_vars_dir }}/{{ Vm_name }}.yml"
+    vm_name: "{{ Vm_name }}"
+    vm_id: "{{ _vm_id }}"
+    vm_ip: "{{ _vm_ip }}"
+
+- name: Append inventory hosts
+  import_tasks: append_inventory.yml
