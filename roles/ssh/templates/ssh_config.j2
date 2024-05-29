@@ -1,14 +1,15 @@
-## all host settings
+# === all host settings ===
 Host *
     ServerAliveInterval 15
     ServerAliveCountMax 10
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
 
-# ssh_hosts settings
+# === ssh_hosts settings ===
 {% for host in ssh_hosts %}
 Host {{ host.name }}
   Hostname {{ host.ip }}
   User root
   IdentityFile /keys/{{ Key_name }}.id_rsa
+
 {% endfor %}
