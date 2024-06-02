@@ -8,5 +8,5 @@
     validate_certs: no
   register: _response
   until: (_response.status == 200 and _response.json.server.status == "ACTIVE")
-  retries: 30
-  delay: 3
+  retries: 90
+  delay: 2
