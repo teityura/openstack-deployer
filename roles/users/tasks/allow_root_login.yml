@@ -1,6 +1,29 @@
+- name: Slurp sshd_config
+  slurp:
+    src: /etc/ssh/sshd_config
+  register: _result_slurp
+
+- name: Check include directive
+  set_fact:
+    _include_exists: "{{ lines | select('search', ptn) | length > 0 }}"
+  vars:
+    ptn: '^\s*Include\s+/etc/ssh/sshd_config.d/\*.conf\s*$'
+    lines: "{{ (_result_slurp.content | b64decode).split('\n') }}"
+
+- name: Append include directive
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    block: Include /etc/ssh/sshd_config.d/*.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for Include directive"
+    insertbefore: BOF
+    append_newline: yes
+    backup: yes
+    validate: /usr/sbin/sshd -T -f %s
+  when: not _include_exists
+
 - name: Allow PermitRootLogin
   blockinfile:
-    path: /etc/ssh/sshd_config.d/PermitRootLogin.conf
+    path: /etc/ssh/sshd_config.d/00-users.conf
     block: |
       PermitRootLogin yes
       PubkeyAuthentication yes
