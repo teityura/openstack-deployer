@@ -24,7 +24,7 @@
         - set_fact:
             vm_ids: "{{ vm_ids | default([]) + [_vm_id] }}"
           vars:
-            _vm_id: "{{ hostvars[item][GROUP_NAME]['id'] }}"
+            _vm_id: "{{ hostvars[item]['vm']['id'] }}"
           loop: "{{ groups[GROUP_NAME] }}"
 
         - include_role:

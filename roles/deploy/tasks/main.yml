@@ -18,7 +18,6 @@
   import_tasks: append_host_vars.yml
   vars:
     host_vars_file: "{{ Host_vars_dir }}/{{ Vm_name }}.yml"
-    group_name: "{{ Group_name }}"
     vm_name: "{{ Vm_name }}"
     vm_id: "{{ _vm_id }}"
     vm_ip: "{{ _vm_ip }}"
