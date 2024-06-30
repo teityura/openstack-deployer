@@ -9,7 +9,7 @@
   tasks:
     - name: Extract vm.ip from each host_var
       set_fact:
-        ssh_hosts: "{{ groups['all'] | map('extract', hostvars, 'vm') }}"
+        ssh_hosts: "{{ groups['all'] | map('extract', hostvars, GROUP_NAME) }}"
 
     - name: Generate ssh config
       include_role:
