@@ -22,7 +22,7 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK FOR vm info"
         block: |
           ansible_user: "{{ User_name }}"
-          vm:
+          {{ group_name }}:
             name: "{{ vm_name }}"
             id: "{{ vm_id }}"
             ip: "{{ vm_ip }}"
